@@ -5,27 +5,46 @@
 
 
 function_v() {
+	FILE *file = fopen("pacienti.txt", "r");
+	char **pole;
+	char buff[100];
+	pole = (char**)malloc(4*sizeof(char*));
 
+	if (pole == NULL) {
+		printf("Pole sa nepodarilo vytvorit.\n");
+		exit(EXIT_FAILURE);
+	}
+	for (int i = 0; i < 6; i++) {
+		pole[i] = (char*)malloc(6*i);
+	}
+	int i = 1;
+	while ((fgets(buff, sizeof(buff), file)) != NULL) {
+		if (i % 7 == 0){
+			printf("\n");
+			i++;
+		}
+		else {
+			pole[i] = buff;
+			printf("[%d] %s", i, pole[i]);
+			i++;
+		}
+	}
+	free(*pole);
+	pole = NULL;
+	return 0;
 }
-function_o() {
 
-}
 
 int main() {
-	char fun;
-	scanf("%c", &fun);
-	while (fun) {
-		FILE* file = fopen("zaznamy.txt", "r");
-		if (fun == 'v') {
-			function_v(file);
+	char input;
+	FILE *file = fopen("pacienti.txt", "r");
+	while (scanf("%c", &input)) {
+		if (input == 'v') {
+			int a = function_v();
 		}
-		if (fun == 'k') {
-			break;
+		if (input == 'k') {
+			printf("halo");
 		}
-		if (fun == 'o') {
-			function_o();
-		}
-		scanf("%c", &fun);
 	}
 	return 0;
 }
