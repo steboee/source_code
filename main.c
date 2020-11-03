@@ -121,51 +121,89 @@ function_v(FILE**ptr) {
 
 }
 
-function_o(FILE**ptr){
-	if (*ptr==EOF){
-		printf("NIE");
-	}
-	else {
-		printf("ANO");
+function_o(char*** pole_datum) {
+	char buff[100];
+	printf("%s", (*pole_datum)[1]);
+	scanf("%s", buff);
+	if (strlen(buff) > 8) {
+		printf("###### - Nekoretny vstup - ######\n");
+		return;
 	}
 
-	
+
 }
 
+	 
 
 
-function_n() {
+
+function_n(FILE**file,char***pole_meno, char*** pole_rodnecislo, char*** pole_diagnoza, char*** pole_vysetrenie, char*** pole_vysledok, char*** pole_datum) {
+	
+	if ((FILE*)file == NULL) {
+		printf("Neotovirl sa subor");
+		return;
+	}
+	
+	int pocet_riadkov = 0;
+	char buff[100];
+	int pacienti = 0;
+	for (int i = 1; fgets(buff, sizeof(buff), *file) != NULL; i++) { // zistovanie poctu riadkov v zaznamoch
+		pocet_riadkov++;
+	}
+	fseek(*file, 1, SEEK_SET);						 // nastavenie sa v subore na zaciatok.
+	int x;
+	x = pocet_riadkov;								//x = lokalna premenna pre nasledujuci for aby nsa zachovala premenná "pocet_riadkov"
+	for (x; x > 0; x = x - 7) {						// zistenie poctu pacientov
+		pacienti++;
+	}
+	
+	*pole_meno = calloc(pacienti, sizeof(char*));
+	*pole_rodnecislo = calloc(pacienti, sizeof(char*));
+	*pole_diagnoza = calloc(pacienti, sizeof(char*));
+	*pole_vysetrenie = calloc(pacienti, sizeof(char*));
+	*pole_vysledok = calloc(pacienti, sizeof(char*));
+	*pole_datum = calloc(pacienti, sizeof(char*));
+	
+	for (int i = 0; i < pacienti; i++) {
+		printf("1\n");
+		((*pole_meno)[i]) = calloc(100, sizeof(char));
+		printf("2\n");
+		fgets((*pole_meno)[i], 100, *file);
+		((*pole_rodnecislo)[i]) = calloc(pacienti, sizeof(char));
+		fgets((*pole_rodnecislo)[i], 50 - 1, *file);
+		(*pole_diagnoza)[i] = calloc(pacienti, sizeof(char));
+		fgets((*pole_diagnoza)[i], 50 - 1, *file);
+		(*pole_vysetrenie)[i] = calloc(pacienti, sizeof(char));
+		fgets((*pole_vysetrenie)[i], 50 - 1, *file);
+		(*pole_vysledok)[i] = calloc(pacienti, sizeof(char));
+		fgets((*pole_vysledok)[i], 50 - 1, *file);
+		(*pole_datum)[i] = calloc(pacienti, sizeof(char));
+		fgets((*pole_datum)[i], 50 - 1, *file);
+		fgets(buff, sizeof(buff), *file);
+		printf("Helloooo");
+	}
 
 }
 
 
 int main() {
 	char input;
-	FILE *file;
-
-	while (scanf("%c", &input)) {
-		switch (input) {
-
-		case 'v':
+	FILE *file = fopen("pacienti.txt","r");
+	char ** pole_meno, ** pole_rodnecislo, ** pole_diagnoza, ** pole_vysetrenie, ** pole_vysledok, ** pole_datum;
+	for (int i = 0;; i) {
+		scanf("%c", &input);
+		if (input == 'v') {
 			function_v(&file);
-			break;
-
-		case 'o':
-			function_o(&file);
-			break;
-
-		case 'n':
-			function_n();
-			break;
-
-		case 'k':
-			exit(1);
-
-		default:
+		}
+		if (input == 'o') {
+			function_o(&pole_datum);
+		}
+		if (input == 'n') {
+			function_n(&file,&pole_meno, &pole_rodnecislo, &pole_diagnoza, &pole_vysetrenie, &pole_vysledok, &pole_datum);
+		}
+		else {
 			continue;
 		}
 	}
-
-
-
+	exit(1);
 }
